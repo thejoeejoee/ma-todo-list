@@ -5,11 +5,12 @@ namespace App\Presenters;
 use Nette;
 
 
-class HomepagePresenter extends Nette\Application\UI\Presenter
-{
+class HomepagePresenter extends BasePresenter {
 
-	public function renderDefault()
-	{
-	}
+    public function renderDefault() {
+    }
 
+    public function handleTest() {
+        $this->flashMessage('huhu');
+    }
 }
