@@ -24,3 +24,9 @@ services:
 	# components
 	- App\Components\JsComponentFactory(%wwwDir%, %productionMode%)
 	- App\Components\CssComponentFactory(%wwwDir%, %productionMode%)
+
+	# LM
+	- App\Model\Mapper('App/Entity')
+
+extensions:
+    leanMapper: App\Model\LeanMapperExtension
