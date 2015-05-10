@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "053d6e19c408d029d944f0a61737439a",
+    "hash": "783248ace4f0b5f6c0c0b978be46aa5c",
     "packages": [
         {
             "name": "dg/dibi",
@@ -211,53 +211,6 @@
                 "twig"
             ],
             "time": "2015-05-04 14:29:27"
-        },
-        {
-            "name": "leafo/lessphp",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/leafo/lessphp.git",
-                "reference": "e701984d5d488599441623d3d56bd42103019ab6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/leafo/lessphp/zipball/e701984d5d488599441623d3d56bd42103019ab6",
-                "reference": "e701984d5d488599441623d3d56bd42103019ab6",
-                "shasum": ""
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.3"
-            },
-            "bin": [
-                "plessc"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.4.x-dev"
-                }
-            },
-            "autoload": {
-                "classmap": [
-                    "lessc.inc.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT",
-                "GPL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "Leaf Corcoran",
-                    "email": "leafot@gmail.com",
-                    "homepage": "http://leafo.net"
-                }
-            ],
-            "description": "lessphp is a compiler for LESS written in PHP.",
-            "homepage": "http://leafo.net/lessphp/",
-            "time": "2014-12-29 20:45:53"
         },
         {
             "name": "natxet/CssMin",
@@ -1713,7 +1666,6 @@
     "stability-flags": {
         "janmarek/webloader": 20,
         "tharos/leanmapper": 20,
-        "leafo/lessphp": 20,
         "natxet/cssmin": 20,
         "neeckeloo/closure-compiler-php": 20
     },

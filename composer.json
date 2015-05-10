@@ -21,7 +21,6 @@
     "tracy/tracy": "~2.3.0",
     "janmarek/webloader": "dev-master",
     "tharos/leanmapper": "dev-master",
-    "leafo/lessphp": "dev-master",
     "natxet/CssMin": "@dev",
     "neeckeloo/closure-compiler-php": "@dev"
   },
