@@ -3,6 +3,7 @@
 namespace App\Components;
 
 
+use Closure\RemoteCompiler;
 use Nette\Http\IRequest;
 use Nette\Object;
 use WebLoader\Compiler;
@@ -21,14 +22,18 @@ class JsComponentFactory extends Object {
     /** @var IRequest */
     private $request;
 
+    /** @var bool */
+    private $productionMode;
+
     /**
      * @param string $wwwPath
      * @param string $productionMode
      * @param IRequest $request
      */
-    public function __construct($wwwPath, IRequest $request) {
+    public function __construct($wwwPath, $productionMode, IRequest $request) {
         $this->wwwPath = $wwwPath;
         $this->request = $request;
+        $this->productionMode = $productionMode;
     }
 
     /**
@@ -46,6 +51,16 @@ class JsComponentFactory extends Object {
         $files->addFile('assets/js/main.js');
 
         $compiler = Compiler::createJsCompiler($files, $this->wwwPath . '/webtemp');
+
+        if ($this->productionMode) {
+            $compiler->addFilter(function ($code) {
+                $remoteCompiler = new RemoteCompiler();
+                $remoteCompiler->addScript($code);
+                $remoteCompiler->setMode(RemoteCompiler::MODE_SIMPLE_OPTIMIZATIONS);
+                $compiled = $remoteCompiler->compile()->getCompiledCode();
+                return $compiled ? $compiled : $code;
+            });
+        }
 
         $control = new JavaScriptLoader($compiler, $this->request->getUrl()->scriptPath . 'webtemp');
         return $control;
