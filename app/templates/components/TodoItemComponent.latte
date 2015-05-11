@@ -1,0 +1,23 @@
+{snippet item}
+{if isset($edit) && $edit}
+    {form itemForm class=>"form-inline"}
+    {input title class=>"form-control"}
+    {input submit class=>"form-control btn btn-sm btn-success ajax"}
+    {/form}
+{else}
+    <div class="row">
+        <div class="col-md-1 handle">
+            <i class="glyphicon glyphicon-move"></i>
+        </div>
+        <div class="col-md-1">
+            <input type="checkbox" class="form-"/>
+        </div>
+        <div class="col-md-8">
+            {$item->title} - finished: {$item->finished}
+        </div>
+        <div class="col-md-2">
+            <a n:href="edit!" class="btn btn-primary btn-sm ajax pull-right">edit</a>
+        </div>
+    </div>
+{/if}
+{/snippet}

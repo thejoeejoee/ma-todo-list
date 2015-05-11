@@ -48,6 +48,7 @@ class JsComponentFactory extends Object {
         $files->addFile('assets/js/nette.forms.js');
         $files->addFile('assets/js/bootstrap.js');
         $files->addFile('assets/js/toastr.js');
+        $files->addFile('assets/js/sortable.js');
         $files->addFile('assets/js/main.js');
 
         $compiler = Compiler::createJsCompiler($files, $this->wwwPath . '/webtemp');

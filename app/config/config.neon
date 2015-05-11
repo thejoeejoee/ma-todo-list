@@ -19,14 +19,30 @@ session:
 
 
 services:
-	router: App\RouterFactory::createRouter
+    router: App\RouterFactory::createRouter
 
-	# components
-	- App\Components\JsComponentFactory(%wwwDir%, %productionMode%)
-	- App\Components\CssComponentFactory(%wwwDir%, %productionMode%)
+    # components
+    - App\Components\JsComponentFactory(%wwwDir%, %productionMode%)
+    - App\Components\CssComponentFactory(%wwwDir%, %productionMode%)
+    - implement: App\Components\ITodoListComponentFactory
+      parameters: [array items]
+      arguments: [%items%]
+    - implement: App\Components\ITodoItemComponentFactory
+      parameters: [App\Model\Entity\Item item = NULL]
+      arguments: [%item%]
 
 	# LM
-	- App\Model\Mapper('App/Entity')
+    - App\Model\Mapper('App\Model\Entity')
+    filters: App\Model\Filters
+    - LeanMapper\DefaultEntityFactory
+    - App\Model\Repository\UserRepository
+    - App\Model\Repository\ItemRepository
+
+    leanMapper.connection:
+        setup:
+            - registerFilter(unfinishedItems, [@filters, unfinishedItems])
+            - registerFilter(orderItems, [@filters, orderItems])
+
 
 extensions:
     leanMapper: App\Model\LeanMapperExtension

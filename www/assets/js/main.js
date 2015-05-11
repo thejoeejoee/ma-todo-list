@@ -4,10 +4,10 @@ $(function () {
         "newestOnTop": true,
         "progressBar": true,
         "positionClass": "toast-top-right",
-        "preventDuplicates": true,
+        "preventDuplicates": false,
         "onclick": null,
-        "showDuration": "500",
-        "hideDuration": "1000",
+        "showDuration": "250",
+        "hideDuration": "250",
         "timeOut": "5000",
         "extendedTimeOut": "1000",
         "showEasing": "swing",
@@ -28,6 +28,18 @@ $(function () {
     $.nette.ext({
         success: function () {
             $.nette.load();
+        }
+    });
+
+    var el = document.getElementById('items');
+    var sort = Sortable.create(el, {
+        animation: 250, // ms, animation speed moving items when sorting, `0` — without animation,
+        handle: ".handle",
+        sortable: "li.sortable",
+        onUpdate: function (evt/**Event*/){
+            var $item = $(evt.item);
+            $item.data('order', $item.index());
+            console.log(evt.newIndex);
         }
     });
 });

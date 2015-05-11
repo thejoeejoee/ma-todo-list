@@ -2,15 +2,24 @@
 
 namespace App\Presenters;
 
-use Nette;
+use App\Components\ITodoListComponentFactory;
+use App\Model\Repository\UserRepository;
 
 
 class HomepagePresenter extends BasePresenter {
 
-    public function renderDefault() {
+    /** @var ITodoListComponentFactory @inject */
+    public $TLCF;
+
+    /** @var UserRepository @inject */
+    public $UR;
+
+    /**
+     * @return \App\Components\TodoListComponent
+     */
+    public function createComponentTodoList() {
+        return $this->TLCF->create($this->UR->get(1)->items);
     }
 
-    public function handleTest() {
-        $this->flashMessage('huhu');
-    }
+
 }

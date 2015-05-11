@@ -2,9 +2,11 @@
 
 namespace App\Model;
 
+use App\Model\Entity\Item;
 use LeanMapper\Caller;
 use LeanMapper\DefaultMapper;
 use LeanMapper\Exception\InvalidStateException;
+use LeanMapper\ImplicitFilters;
 use LeanMapper\Row;
 
 class Mapper extends DefaultMapper {
@@ -50,7 +52,9 @@ class Mapper extends DefaultMapper {
     }
 
     public function getImplicitFilters($entityClass, Caller $caller = null) {
-
+        if ($entityClass === Item::class) {
+            return new ImplicitFilters(['unfinishedItems', 'orderItems']);
+        }
         return array();
     }
 
