@@ -3,7 +3,7 @@
   "description": "Simple TODO list written in Nette.",
   "type": "project",
   "require": {
-    "php": ">= 5.4.0",
+    "php": ">= 5.5.0",
     "nette/application": "~2.3.0",
     "nette/bootstrap": "~2.3.0",
     "nette/caching": "~2.3.0",
