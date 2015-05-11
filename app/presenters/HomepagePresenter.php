@@ -18,7 +18,7 @@ class HomepagePresenter extends BasePresenter {
      * @return \App\Components\TodoListComponent
      */
     public function createComponentTodoList() {
-        return $this->TLCF->create($this->UR->get(1)->items);
+        return $this->TLCF->create($this->UR->get(1));
     }
 
 

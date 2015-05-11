@@ -1,4 +1,4 @@
-$(function () {
+jQuery(function ($) {
     toastr.options = {
         "closeButton": true,
         "newestOnTop": true,
@@ -30,16 +30,17 @@ $(function () {
             $.nette.load();
         }
     });
+});
 
-    var el = document.getElementById('items');
-    var sort = Sortable.create(el, {
+var initSortable = function () {
+    var sort = Sortable.create(items, {
         animation: 250, // ms, animation speed moving items when sorting, `0` — without animation,
         handle: ".handle",
         sortable: "li.sortable",
-        onUpdate: function (evt/**Event*/){
-            var $item = $(evt.item);
+        onUpdate: function (evt/**Event*/) {
+            var $item = jQuery(evt.item);
             $item.data('order', $item.index());
             console.log(evt.newIndex);
         }
     });
-});
+};

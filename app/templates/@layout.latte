@@ -6,6 +6,8 @@
 
     <title>{ifset title}{include title|striptags} | {/ifset}TODO List</title>
 
+    {control jsComponent}
+    {control cssComponent}
 </head>
 
 <body>
@@ -13,8 +15,6 @@
     {block content}{/block}
 </div>
 
-{control jsComponent}
-{control cssComponent}
 
 {snippet flashes}{if $flashes|length}
     <script>

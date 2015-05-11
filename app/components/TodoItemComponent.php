@@ -4,6 +4,7 @@ namespace App\Components;
 
 
 use App\Model\Entity\Item;
+use App\Model\Entity\User;
 use App\Model\Repository\ItemRepository;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
@@ -13,12 +14,16 @@ class TodoItemComponent extends BaseComponent {
     /** @var Item|NULL */
     private $item;
 
+    /** @var User|NULL */
+    private $user;
+
     /** @var ItemRepository */
     private $IR;
 
-    public function __construct(Item $item = NULL, ItemRepository $IR) {
+    public function __construct(Item $item = NULL, User $user, ItemRepository $IR) {
         $this->item = $item;
         $this->IR = $IR;
+        $this->user = $user;
     }
 
     /***/
@@ -58,6 +63,10 @@ class TodoItemComponent extends BaseComponent {
         if ($this->isAjax()) {
             $this->redrawControl('item');
         }
+        $item = $this->item ? $this->item : new Item();
+        $item->assign($values);
+        $item->user = $this->user;
+        $this->IR->persist($item);
         $this->presenter->flashMessage($this->item ? 'Aktualizováno!' : "Úspěšně přidáno!", 'success');
     }
 }
@@ -65,7 +74,8 @@ class TodoItemComponent extends BaseComponent {
 interface ITodoItemComponentFactory {
     /**
      * @param Item|NULL $item
+     * @param User $user
      * @return TodoItemComponent
      */
-    public function create(Item $item = NULL);
+    public function create(Item $item = NULL, User $user);
 }

@@ -25,11 +25,11 @@ services:
     - App\Components\JsComponentFactory(%wwwDir%, %productionMode%)
     - App\Components\CssComponentFactory(%wwwDir%, %productionMode%)
     - implement: App\Components\ITodoListComponentFactory
-      parameters: [array items]
-      arguments: [%items%]
+      parameters: [App\Model\Entity\User user]
+      arguments: [%user%]
     - implement: App\Components\ITodoItemComponentFactory
-      parameters: [App\Model\Entity\Item item = NULL]
-      arguments: [%item%]
+      parameters: [App\Model\Entity\Item item = NULL, App\Model\Entity\User user]
+      arguments: [%item%, %user%]
 
 	# LM
     - App\Model\Mapper('App\Model\Entity')
