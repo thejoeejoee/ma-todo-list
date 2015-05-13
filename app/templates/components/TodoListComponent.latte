@@ -1,12 +1,20 @@
 {snippet items}
     <ul class="list-group" id="items">
-        <li n:foreach="$items as $item" class="list-group-item sortable" data-id="{$item->id}"
-            data-order="{$item->order}">{control todoItemComponent-$item->id}</li>
+        <li n:foreach="$items as $item"
+            class="list-group-item sortable item"
+            data-id="{$item->id}"
+            data-order="{$item->order}"
+            data-insert="{link insert! $item->id, '__replace__'}"
+            data-finish="{link finish! $item->id}"
+            data-undo="{link finish! $item->id, 0}">
+            {control todoItemComponent-$item->id}
+        </li>
         <li class="list-group-item">{control todoItemComponent-0}</li>
     </ul>
     <script>
         jQuery(function ($) {
-            initSortable();
+            initSortable(items);
+            initFinishing();
         });
     </script>
 {/snippet}

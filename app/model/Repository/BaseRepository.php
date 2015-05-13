@@ -2,6 +2,7 @@
 
 namespace App\Model\Repository;
 
+use App\Model\Entity\BaseEntity;
 use LeanMapper\Entity;
 use LeanMapper\Repository;
 
@@ -16,21 +17,17 @@ abstract class BaseRepository extends Repository {
     const METHOD_AND = 'AND';
 
     /**
-     * @param string $event
-     * @param callable $callback
-     */
-    public function registerCallback($event, $callback) {
-        $this->events->registerCallback($event, $callback);
-    }
-
-    /**
      * @param $id
-     * @return Entity
+     * @param bool $userFilters
+     * @return BaseEntity|NULL
      */
-    public function get($id) {
-        $row = $this->createFluent()
-            ->where('[' . $this->getTable() . '.id] = %i', $id)
-            ->fetch();
+    public function get($id, $userFilters = TRUE) {
+        if ($userFilters) {
+            $f = $this->createFluent();
+        } else {
+            $f = $this->connection->select('[' . $this->getTable() . '.*]')->from($this->getTable());
+        }
+        $row = $f->where('[' . $this->getTable() . '.id] = %i', $id)->fetch();
         return $row ? $this->createEntity($row) : NULL;
     }
 

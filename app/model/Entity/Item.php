@@ -2,8 +2,6 @@
 
 namespace App\Model\Entity;
 
-// TODO: add before insert trigger to fix ordering after insert
-
 /**
  * @property    int     $id
  * @property    string  $title

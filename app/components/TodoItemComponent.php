@@ -47,7 +47,7 @@ class TodoItemComponent extends BaseComponent {
      */
     public function createComponentItemForm() {
         $f = new Form();
-        $title = $f->addText('title', 'Titulek');
+        $title = $f->addText('title', 'Titulek')->setRequired('Název je opravdu důležitý, vyplň ho, prosím.');
         if ($this->item) {
             $title->setValue($this->item->title);
         }
@@ -58,16 +58,22 @@ class TodoItemComponent extends BaseComponent {
         return $f;
     }
 
-    /***/
+    /**
+     * @param Form $form
+     * @param ArrayHash $values
+     */
     public function itemFormSucceed(Form $form, ArrayHash $values) {
-        if ($this->isAjax()) {
-            $this->redrawControl('item');
-        }
         $item = $this->item ? $this->item : new Item();
         $item->assign($values);
         $item->user = $this->user;
+        $item->order = $item->user->items ? (max(array_map(function (Item $item) { return $item->order; }, $item->user->items)) + 1) : 1;
         $this->IR->persist($item);
         $this->presenter->flashMessage($this->item ? 'Aktualizováno!' : "Úspěšně přidáno!", 'success');
+        if ($this->isAjax()) {
+            $this->redrawControl('item');
+            // TODO: fix rendering new item
+            $this->parent->parent->redrawControl('items');
+        }
     }
 }
 

@@ -24,7 +24,6 @@ class TodoListComponent extends BaseComponent {
     private $TICF;
 
     /**
-     * @param array $items
      * @param User $user
      * @param ItemRepository $IR
      * @param ITodoItemComponentFactory $TICF
@@ -33,32 +32,54 @@ class TodoListComponent extends BaseComponent {
         $this->IR = $IR;
         $this->TICF = $TICF;
         $this->user = $user;
-        $this->items = $user->items;
     }
 
-    /***/
-    public function render()
-    {
-        $this->template->items = $this->items;
+    public function render() {
+        $this->user->markAsUpdated();
+        $this->template->items = $this->user->items;
         parent::render();
     }
 
     /**
      * @return Multiplier
      */
-    protected function createComponentTodoItemComponent()
-    {
+    protected function createComponentTodoItemComponent() {
         return new Multiplier(function ($id) {
             $todoItem = $this->TICF->create($this->IR->get($id), $this->user);
-            /** @var Form $form */
-            $form = $todoItem['itemForm'];
-            $form->onSuccess[] = function () {
-                if ($this->isAjax()) {
+            if (!$id) {
+                /** @var Form $form */
+                $form = $todoItem['itemForm'];
+                $form->onSuccess[] = function ($values) {
                     $this->redrawControl('items');
-                }
-            };
+                };
+            }
             return $todoItem;
         });
+    }
+
+    /**
+     * Signal for moving items to new index.
+     *
+     * @param int $id
+     * @param int $index
+     */
+    public function handleInsert($id, $index) {
+        /** @var Item $item */
+        $item = $this->IR->get($id);
+        $this->IR->insertAt($item, $index);
+    }
+
+    /**
+     * Signal for (un)finishing todo items.
+     *
+     * @param int $id
+     * @param int $finished
+     */
+    public function handleFinish($id, $finished = 1) {
+        /** @var Item $item */
+        $item = $this->IR->get((int)$id, FALSE);
+        $item->finished = $finished;
+        $this->IR->persist($item);
     }
 }
 

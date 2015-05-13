@@ -1,22 +1,33 @@
 {snippet item}
 {if isset($edit) && $edit}
-    {form itemForm class=>"form-inline"}
-    {input title class=>"form-control"}
-    {input submit class=>"form-control btn btn-sm btn-success ajax"}
-    {/form}
-{else}
-    <div class="row">
-        <div class="col-md-1 handle">
-            <i class="glyphicon glyphicon-move"></i>
-        </div>
-        <div class="col-md-1">
-            <input type="checkbox" class="form-"/>
-        </div>
-        <div class="col-md-8">
-            {$item->title} - finished: {$item->finished}
+    {form itemForm class=>"row"}
+        <div class="col-md-10">
+            {input title class=>"form-control"}
         </div>
         <div class="col-md-2">
-            <a n:href="edit!" class="btn btn-primary btn-sm ajax pull-right">edit</a>
+            {input submit class=>"form-control btn btn-sm btn-success ajax"}
+        </div>
+    {/form}
+    <script n:if="isset($item)">
+        jQuery(function ($) {
+            $('.item[data-id=' + {$item->id} + ']').find('input[type=text]').focus();
+        });
+    </script>
+{else}
+    <div class="row">
+        <div class="col-md-1 col-sm-1 col-xs-1 handle">
+            <i class="glyphicon glyphicon-move"></i>
+        </div>
+        <div class="col-md-9 col-sm-9 col-xs-9">
+            <div class="checkbox">
+                <input type="checkbox" id="finished-{$item->id}">
+                <label for="finished-{$item->id}">
+                    {$item->title}
+                </label>
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-2 col-xs-1">
+            <a n:href="edit!" class="btn btn-primary ajax pull-right"><i class="glyphicon glyphicon-pencil"></i></a>
         </div>
     </div>
 {/if}
