@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\Components\ITodoListComponentFactory;
+use App\Components\TodoListComponent;
 use App\Model\Repository\UserRepository;
 
 
@@ -15,10 +16,17 @@ class HomepagePresenter extends BasePresenter {
     public $UR;
 
     /**
-     * @return \App\Components\TodoListComponent
+     * @return TodoListComponent
      */
     public function createComponentTodoList() {
-        return $this->TLCF->create($this->UR->get(1));
+        return $this->TLCF->create($this->UR->get($this->user->id));
+    }
+
+    protected function startup() {
+        parent::startup();
+        if (!$this->user->loggedIn) {
+            $this->redirect('Sign:in');
+        }
     }
 
 

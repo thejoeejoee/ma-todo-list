@@ -8,6 +8,15 @@ use App\Model\Entity\User;
 use App\Model\Repository\ItemRepository;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Multiplier;
+use Nette\InvalidStateException;
+
+interface ITodoListComponentFactory {
+    /**
+     * @param User $user
+     * @return TodoListComponent
+     */
+    public function create(User $user);
+}
 
 class TodoListComponent extends BaseComponent {
 
@@ -35,38 +44,24 @@ class TodoListComponent extends BaseComponent {
     }
 
     public function render() {
-        $this->user->markAsUpdated();
         $this->template->items = $this->user->items;
         parent::render();
     }
 
     /**
-     * @return Multiplier
-     */
-    protected function createComponentTodoItemComponent() {
-        return new Multiplier(function ($id) {
-            $todoItem = $this->TICF->create($this->IR->get($id), $this->user);
-            if (!$id) {
-                /** @var Form $form */
-                $form = $todoItem['itemForm'];
-                $form->onSuccess[] = function ($values) {
-                    $this->redrawControl('items');
-                };
-            }
-            return $todoItem;
-        });
-    }
-
-    /**
-     * Signal for moving items to new index.
-     *
      * @param int $id
-     * @param int $index
+     * @param int $new
+     * @throws \Exception
      */
-    public function handleInsert($id, $index) {
+    public function handleInsert($id, $new) {
         /** @var Item $item */
         $item = $this->IR->get($id);
-        $this->IR->insertAt($item, $index);
+        try {
+            $this->IR->insertOn($item, $new, $this);
+        } catch (InvalidStateException $e) {
+            $this->presenter->flashMessage('Hohoo', 'warning');
+        }
+
     }
 
     /**
@@ -78,15 +73,25 @@ class TodoListComponent extends BaseComponent {
     public function handleFinish($id, $finished = 1) {
         /** @var Item $item */
         $item = $this->IR->get((int)$id, FALSE);
-        $item->finished = $finished;
-        $this->IR->persist($item);
+        $this->IR->finish($item, $finished);
     }
-}
 
-interface ITodoListComponentFactory {
     /**
-     * @param User $user
-     * @return TodoListComponent
+     * @return Multiplier
      */
-    public function create(User $user);
+    protected function createComponentTodoItemComponent() {
+        return new Multiplier(function ($id) {
+            /** @var Item $item */
+            $item = $this->IR->get($id);
+            $todoItem = $this->TICF->create($item, $this->user);
+            if (!$id) {
+                /** @var Form $form */
+                $form = $todoItem['itemForm'];
+                $form->onSuccess[] = function ($values) {
+                    $this->redrawControl('items');
+                };
+            }
+            return $todoItem;
+        });
+    }
 }

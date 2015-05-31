@@ -1,8 +1,5 @@
-# WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
-# http://nette.org/security-warning
-
 parameters:
-
+    useRemoteCompiler: true
 
 php:
 	date.timezone: Europe/Prague
@@ -20,9 +17,10 @@ session:
 
 services:
     router: App\RouterFactory::createRouter
+    - App\Model\UserManager
 
     # components
-    - App\Components\JsComponentFactory(%wwwDir%, %productionMode%)
+    - App\Components\JsComponentFactory(%wwwDir%, %productionMode%, %useRemoteCompiler%)
     - App\Components\CssComponentFactory(%wwwDir%, %productionMode%)
     - implement: App\Components\ITodoListComponentFactory
       parameters: [App\Model\Entity\User user]
@@ -30,6 +28,9 @@ services:
     - implement: App\Components\ITodoItemComponentFactory
       parameters: [App\Model\Entity\Item item = NULL, App\Model\Entity\User user]
       arguments: [%item%, %user%]
+    - implement: App\Components\IUserComponentFactory
+      parameters: [Nette\Security\User user]
+      arguments: [%user%]
 
 	# LM
     - App\Model\Mapper('App\Model\Entity')

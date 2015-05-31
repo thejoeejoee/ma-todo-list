@@ -25,15 +25,20 @@ class JsComponentFactory extends Object {
     /** @var bool */
     private $productionMode;
 
+    /** @var bool */
+    private $useRemoteCompiler;
+
     /**
-     * @param string $wwwPath
-     * @param string $productionMode
+     * @param $wwwPath
+     * @param $productionMode
+     * @param $useRemoteCompiler
      * @param IRequest $request
      */
-    public function __construct($wwwPath, $productionMode, IRequest $request) {
+    public function __construct($wwwPath, $productionMode, $useRemoteCompiler, IRequest $request) {
         $this->wwwPath = $wwwPath;
         $this->request = $request;
         $this->productionMode = $productionMode;
+        $this->useRemoteCompiler = $useRemoteCompiler;
     }
 
     /**
@@ -53,7 +58,7 @@ class JsComponentFactory extends Object {
 
         $compiler = Compiler::createJsCompiler($files, $this->wwwPath . '/webtemp');
 
-        if ($this->productionMode) {
+        if ($this->productionMode && $this->useRemoteCompiler) {
             $compiler->addFilter(function ($code) {
                 $remoteCompiler = new RemoteCompiler();
                 $remoteCompiler->addScript($code);

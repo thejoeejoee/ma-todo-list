@@ -4,22 +4,24 @@ namespace App\Model\Repository;
 
 
 use App\Model\Entity\Item;
+use Nette\InvalidStateException;
 
 class ItemRepository extends BaseRepository {
 
     /**
-     * Inserts item to index.
-     *
      * @param Item $item
-     * @param int $index
+     * @param $new
+     * @throws \DibiException
      * @throws \Exception
      */
-    public function insertAt(Item $item, $index) {
+    public function insertOn(Item $item, $new) {
+        $old = $item->order;
         $this->connection->begin();
         try {
-            if ($index > $item->order) {
+            if ($new > $old) {
                 // moving forward
                 // all items between actual item order and new index are moved backward and item order is set to new index
+
                 $this->connection->query('
               UPDATE [item]
               SET
@@ -31,9 +33,10 @@ class ItemRepository extends BaseRepository {
                 AND
                   [ORDER] <= %i
                 AND
-                  [finished] = 0',
-                    $item->user->id, $item->order, $index);
-            } elseif ($index < $item->order) {
+                  [finished] = 0', $item->user->id, $old, $new);
+
+                $item->order = $new;
+            } elseif ($new < $old) {
                 // moving backward
                 // all items between actual order and new index are moved forward and item inserted to empty place
                 $this->connection->query('
@@ -48,14 +51,52 @@ class ItemRepository extends BaseRepository {
                   [ORDER] < %i
                 AND
                   [finished] = 0',
-                    $item->user->id, $index, $item->order);
+                    $item->user->id, $new, $old);
+                $item->order = $new;
+            } else {
+                throw new InvalidStateException();
             }
-            $item->order = $index;
             $this->persist($item);
         } catch (\Exception $e) {
             $this->connection->rollback();
             throw $e;
         }
         $this->connection->commit();
+    }
+
+    /**
+     * @param Item $item
+     * @param bool $finished
+     * @throws \DibiException
+     * @throws \Exception
+     */
+    public function finish(Item $item, $finished) {
+        $this->connection->begin();
+        try {
+            if ($finished) {
+                $this->connection->query('
+              UPDATE [item]
+              SET
+                [ORDER] = [ORDER]-1
+              WHERE
+                  [user_id] = %i
+                AND
+                  [ORDER] > %i
+                AND
+                  [finished] = 0', $item->user->id, $item->order);
+                $item->finished = 1;
+            } else {
+                $item->order = max(array_map(function (Item $item) {
+                        return $item->order;
+                    }, $item->user->items)) + 1;
+                $item->finished = 0;
+            }
+            $this->persist($item);
+        } catch (\Exception $e) {
+            $this->connection->rollback();
+            throw $e;
+        }
+        $this->connection->commit();
+
     }
 }

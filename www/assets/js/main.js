@@ -19,17 +19,20 @@ jQuery(function ($) {
     $(document).ajaxError(function (e, r) {
         if (r.status === 403) {
             window.location.reload(true);
-        } else {
+        } else if (r.statusText != "canceled") {
             toastr.error('Sorry, chyba na straně serveru.', 'Ouch...');
         }
+    }).ajaxSuccess(function (e, r) {
+        $.nette.load();
+        init();
     });
-
+    var init = function () {
+        var $items = $('#items');
+        initSortable($items.get(0));
+        initFinishing($items);
+    };
+    init();
     $.nette.init();
-    $.nette.ext({
-        success: function () {
-            $.nette.load();
-        }
-    });
 });
 
 var initSortable = function (items) {
@@ -37,7 +40,7 @@ var initSortable = function (items) {
         animation: 250,
         handle: ".handle",
         ghostClass: 'active',
-        sortable: "li.sortable",
+        sortable: "li.item.sortable",
         onUpdate: function (evt) {
             var $item = jQuery(evt.item);
             var url = $item.data('insert').replace('__replace__', $item.index());
@@ -48,10 +51,10 @@ var initSortable = function (items) {
     });
 };
 
-var initFinishing = function () {
-    $('ul#items').on('change', 'li.item input[type=checkbox]', function (evt, el) {
+var initFinishing = function ($items) {
+    $items.off('click').on('click', 'button.finish', function (evt, el) {
         var $this = $(this);
-        var $item = $this.closest('.item');
+        var $item = $this.closest('li.item');
         $item.slideUp(500);
         var $btn = $('<button type="button" class="btn btn-danger btn-undo">Vrátit zpět potvrzení!</button>');
         toastr.info($btn, {hideDuration: 10000, extendedTimeOut: 50000});
@@ -61,7 +64,7 @@ var initFinishing = function () {
             $.nette.ajax({url: $item.data('undo')});
             toastr.warning('Akce zrušena.');
             $item.slideDown(500);
-            $item.find('input[type=checkbox]')[0].checked = 0;
+            $item.parent().append($item);
         });
     });
 };

@@ -6,6 +6,21 @@ use Nette\Application\UI\Control;
 
 abstract class BaseComponent extends Control {
 
+    public function render() {
+        $this->template->render();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAjax() {
+        return $this->presenter->isAjax();
+    }
+
+    public function flashMessage($message, $type = 'info') {
+        return $this->presenter->flashMessage($message, $type);
+    }
+
     /**
      * @return \Nette\Application\UI\ITemplate
      */
@@ -26,14 +41,5 @@ abstract class BaseComponent extends Control {
         return $template;
     }
 
-    public function render() {
-        $this->template->render();
-    }
 
-    /**
-     * @return bool
-     */
-    public function isAjax() {
-        return $this->presenter->isAjax();
-    }
 }

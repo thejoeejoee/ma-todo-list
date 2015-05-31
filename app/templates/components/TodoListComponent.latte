@@ -9,12 +9,8 @@
             data-undo="{link finish! $item->id, 0}">
             {control todoItemComponent-$item->id}
         </li>
+    </ul>
+    <ul class="list-group">
         <li class="list-group-item">{control todoItemComponent-0}</li>
     </ul>
-    <script>
-        jQuery(function ($) {
-            initSortable(items);
-            initFinishing();
-        });
-    </script>
 {/snippet}

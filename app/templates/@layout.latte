@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>{ifset title}{include title|striptags} | {/ifset}TODO List</title>
 
@@ -11,9 +11,19 @@
 </head>
 
 <body>
-<div class="container">
-    {block content}{/block}
-</div>
+{block container}
+    <div class="container">
+        <div class="jumbotron">
+            <h1>TODO list</h1>
+
+            <p>Toto je jednoduchý multiuživatelský a editovatelný seznam pro spousty vašich todo úkolů.</p>
+            {if $user->loggedIn}
+                {control userComponent}
+            {/if}
+        </div>
+        {block content}{/block}
+    </div>
+{/block}
 
 
 {snippet flashes}{if $flashes|length}

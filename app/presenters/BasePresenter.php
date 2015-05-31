@@ -4,29 +4,23 @@ namespace App\Presenters;
 
 
 use App\Components\CssComponentFactory;
+use App\Components\IUserComponentFactory;
 use App\Components\JsComponentFactory;
+use App\Components\UserComponent;
 use Nette\Application\UI\Presenter;
+use WebLoader\Nette\CssLoader;
+use WebLoader\Nette\JavaScriptLoader;
 
 class BasePresenter extends Presenter {
 
     /** @var JsComponentFactory @inject */
     public $JsComponentFactory;
 
-    protected function createComponentJsComponent() {
-        return $this->JsComponentFactory->create();
-    }
-
     /** @var CssComponentFactory @inject */
     public $CssComponentFactory;
 
-    protected function createComponentCssComponent() {
-        return $this->CssComponentFactory->create();
-    }
-
-    protected function afterRender() {
-        parent::afterRender();
-        $this->redrawControl('flashes');
-    }
+    /** @var IUserComponentFactory @inject */
+    public $UCF;
 
     /**
      * Formats layout template file names.
@@ -45,7 +39,6 @@ class BasePresenter extends Presenter {
         return $list;
     }
 
-
     /**
      * Formats view template file names.
      * @return array
@@ -60,6 +53,41 @@ class BasePresenter extends Presenter {
             "$dir/templates/$presenter/$this->view.latte",
         );
         return $list;
+    }
+
+    /**
+     * @return JavaScriptLoader
+     */
+    protected function createComponentJsComponent() {
+        return $this->JsComponentFactory->create();
+    }
+
+    /**
+     * @return CssLoader
+     */
+    protected function createComponentCssComponent() {
+        return $this->CssComponentFactory->create();
+    }
+
+    /**
+     * @return UserComponent
+     */
+    protected function createComponentUserComponent() {
+        $userComponent = $this->UCF->create($this->user);
+        $userComponent->onLogin[] = function () {
+            $this->flashMessage('Příhlášení proběhlo úspěšně', 'success');
+            $this->redirect('Homepage:default');
+        };
+        $userComponent->onLogout[] = function () {
+            $this->flashMessage('Uživatel odhlášen!', 'success');
+            $this->redirect('Homepage:default');
+        };
+        return $userComponent;
+    }
+
+    protected function afterRender() {
+        parent::afterRender();
+        $this->redrawControl('flashes');
     }
 
 }
