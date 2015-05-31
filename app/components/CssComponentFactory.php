@@ -4,12 +4,10 @@ namespace App\Components;
 
 
 use Nette\Http\IRequest;
-use Nette\Http\Request;
 use Nette\Object;
 use Nette\Utils\Strings;
 use WebLoader\Compiler;
 use WebLoader\FileCollection;
-use WebLoader\Filter\LessFilter;
 use WebLoader\InvalidArgumentException;
 use WebLoader\Nette\CssLoader;
 
@@ -18,19 +16,17 @@ use WebLoader\Nette\CssLoader;
  * @package Minicup\Components
  */
 class CssComponentFactory extends Object {
+    /** @var IRequest */
+    public $request;
     /** @var  string */
     private $wwwPath;
-
     /** @var  bool */
     private $productionMode;
 
-    /** @var IRequest */
-    public $request;
-
     /**
-     * @param string $wwwPath
-     * @param bool $productionMode
-     * @param Request $request
+     * @param $wwwPath
+     * @param $productionMode
+     * @param IRequest $request
      */
     public function __construct($wwwPath, $productionMode, IRequest $request) {
         $this->wwwPath = $wwwPath;
@@ -39,8 +35,7 @@ class CssComponentFactory extends Object {
     }
 
     /**
-     * @param string $module
-     * @return CssLoader
+     * @return CssComponentFactory|CssLoader
      * @throws InvalidArgumentException
      */
     public function create() {

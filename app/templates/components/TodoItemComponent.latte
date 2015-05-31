@@ -1,13 +1,13 @@
 {snippet item}
 {if isset($edit) && $edit}
-    {form itemForm class=>"row ajax"}
+    <form n:name="itemForm" n:class="row,ajax">
         <div class="col-md-10">
             {input title class=>"form-control"}
         </div>
         <div class="col-md-2">
             {input submit class=>"form-control btn btn-sm btn-success"}
         </div>
-    {/form}
+    </form>
     <script n:if="isset($item)">
         $('.item[data-id=' + {$item->id} +']').find('input[type=text]').focus();
     </script>

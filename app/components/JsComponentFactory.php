@@ -42,7 +42,6 @@ class JsComponentFactory extends Object {
     }
 
     /**
-     * @param string $module
      * @return JavaScriptLoader
      * @throws InvalidArgumentException
      */

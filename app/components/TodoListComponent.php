@@ -6,7 +6,6 @@ namespace App\Components;
 use App\Model\Entity\Item;
 use App\Model\Entity\User;
 use App\Model\Repository\ItemRepository;
-use Nette\Application\UI\Form;
 use Nette\Application\UI\Multiplier;
 use Nette\InvalidStateException;
 
@@ -84,13 +83,6 @@ class TodoListComponent extends BaseComponent {
             /** @var Item $item */
             $item = $this->IR->get($id);
             $todoItem = $this->TICF->create($item, $this->user);
-            if (!$id) {
-                /** @var Form $form */
-                $form = $todoItem['itemForm'];
-                $form->onSuccess[] = function ($values) {
-                    $this->redrawControl('items');
-                };
-            }
             return $todoItem;
         });
     }

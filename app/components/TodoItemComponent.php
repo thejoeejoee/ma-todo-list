@@ -87,12 +87,8 @@ class TodoItemComponent extends BaseComponent {
         }
         $this->IR->persist($item);
         $this->presenter->flashMessage($this->item ? 'Aktualizováno!' : "Úspěšně přidáno!", 'success');
-        if ($this->isAjax()) {
+        if ($this->isAjax() && $this->item) {
             $this->redrawControl('item');
-            // TODO: fix rendering new item
-            /** @var TodoListComponent $list */
-            $list = $this->getParent()->getParent();
-            $list->redrawControl('items');
         } else {
             $this->presenter->redirect('this');
         }
