@@ -1,0 +1,38 @@
+{snippet}
+{if $user->loggedIn}
+    <p>
+        Přihlášen uživatel <strong>{$user->identity->username}</strong>
+
+        <a class="btn btn-sm btn-warning ajax" n:href="logout!">
+            <i class="glyphicon glyphicon-log-out"></i> odhlásit se
+        </a>
+
+        <button class="btn btn-primary pull-right" type="button" data-toggle="collapse" data-target="#registerForm">
+            <i class="glyphicon glyphicon-user"></i> Registrovat nového uživatele
+        </button>
+    </p>
+    <div id="registerForm" class="collapse">
+        <form n:name="registerForm" class="form-register form ajax">
+            <div n:if="$form->errors">
+                <div n:foreach="$form->errors as $error" class="alert alert-danger">{$error}</div>
+            </div>
+            {input username class=>form-control}
+            {input password class=>form-control}
+            {input password_check class=>form-control}
+            {input submit class=>"btn btn-lg btn-primary btn-block"}
+        </form>
+    </div>
+{else}
+    <form n:name="loginForm" class="form ajax">
+        <p class="lead">Budete se muset přihlásit...</p>
+
+        <div class="alert alert-info">Co takhle zkusit <i>guest</i> a <i>guest</i>?</div>
+        <div n:if="$form->errors">
+            <div n:foreach="$form->errors as $error" class="alert alert-danger">{$error}</div>
+        </div>
+        {input username class=>form-control}
+        {input password class=>form-control}
+        {input submit class=>"btn btn-lg btn-primary btn-block"}
+    </form>
+{/if}
+{/snippet}
